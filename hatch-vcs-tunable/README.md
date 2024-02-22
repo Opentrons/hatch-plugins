@@ -12,6 +12,7 @@ This is a plugin for [Hatch](https://github.com/pypa/hatch) that extends the plu
 
 The reason you might want to do this is if you have multiple release tracks for your package, or multiple contexts in which it is used, and want to give it different versions in those different contexts.
 
+Don't merge me.
 **Table of Contents**
 
 - [Use as a plugin](#plugin)
