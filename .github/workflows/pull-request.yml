@@ -68,7 +68,7 @@ jobs:
   hatch-vcs-tunable-tests:
     if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF }}
     needs: [which-paths, hatch-vcs-tunable-analysis]
-    runs-on: ${{ matrix.env }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
       matrix:
