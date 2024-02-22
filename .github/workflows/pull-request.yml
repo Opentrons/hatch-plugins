@@ -27,7 +27,7 @@ jobs:
       - name: Set diff output for hatch-vcs-tunable
         id: hatch-vcs-tunable-diff
         run: |
-          echo "HATCH_VCS_TUNABLE_DIFF=\"${GIT_DIFF_FILTERED}\"" >> $GITHUB_OUTPUT
+          echo "HATCH_VCS_TUNABLE_DIFF=\"$(echo ${GIT_DIFF_FILTERED} | sed 's/ *$//')\"" >> $GITHUB_OUTPUT
       - name: Check if repo management changed
         uses: technote-space/get-diff-action@v6
         with:
@@ -36,7 +36,7 @@ jobs:
       - name: Set diff output for management
         id: management-diff
         run: |
-          echo "MANAGEMENT_DIFF=\"${GIT_DIFF_FILTERED}\"" >> $GITHUB_OUTPUT
+          echo "MANAGEMENT_DIFF=\"$(echo ${GIT_DIFF_FILTERED} | set 's/ *$//')\"" >> $GITHUB_OUTPUT
 
   hatch-vcs-tunable-analysis:
     if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF != '' }}
@@ -49,6 +49,7 @@ jobs:
           echo "Is equal to empty string: ${{needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF == ''}}"
           echo "Is equal to null: ${{needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF == null}}"
           echo "Contains empty string: ${{contains(needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF, '')}}"
+          echo "Hexdump: echo '${{needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF}}' | hexdump"
       - name: Install python
         uses: actions/setup-python@v5
         with:
