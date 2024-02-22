@@ -1,0 +1,149 @@
+[build-system]
+requires = ["hatchling==1.21.1", "hatch-vcs==0.4.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hatch-vcs-tunable"
+dynamic = ["version"]
+description = "Define your package's version from vcs refs, with build-time tuning of which tags to use."
+readme = "README.md"
+requires-python = ">=3.8"
+license = "Apache-2.0"
+keywords = ["hatch", "version", "git", "plugin", "mercurial"]
+authors = [
+  { name = "Opentrons Engineering", email = "engineering@opentrons.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+  "Framework :: Hatch",
+]
+dependencies = [
+    "hatch-vcs>=0.3.0,<1.0.0"
+]
+
+
+[project.urls]
+Documentation = "https://github.com/Opentrons/hatch-plugins#readme"
+Issues = "https://github.com/Opentrons/hatch-plugins/issues"
+Source = "https://github.com/Opentrons/hatch-plugins/tree/main/hatch-vcs-tunable"
+Chnagelog = "https://github.com/Opentrons/hatch-plugins/tree/main/hatch-vcs-tunable/CHANGES.md"
+
+[tool.hatch.version]
+source = "vcs"
+fallback-version = "0.0.0-dev"
+tag-pattern = 'hatch-vcs-tunable@(?P<version>)'
+
+[tool.hatch.build.hooks.vcs]
+version-file="src/hatch_vcs_tunable/_version.py"
+
+[tool.hatch.envs.maintenance]
+dependencies = [
+  "towncrier"
+]
+[tool.hatch.envs.maintenance.scripts]
+changes-new = "towncrier create {args}"
+changes-build = "towncrier build {args}"
+
+[tool.hatch.envs.test]
+dependencies = [
+  "coverage[toml]>=6.5",
+  "pytest~=8.0.1",
+]
+[tool.hatch.envs.test.scripts]
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
+cov-report = [
+  "- coverage combine",
+  "coverage report",
+]
+cov = [
+  "test-cov",
+  "cov-report",
+]
+
+[tool.hatch.envs.test.overrides]
+name."py*-0.3.0".dependencies = ["hatch-vcs==0.3.0"]
+name."py*-0.4.0".dependencies = ["hatch-vcs==0.4.0"]
+name."py*-latest".dependencies = ["hatch-vcs"]
+
+
+[[tool.hatch.envs.test.matrix]]
+python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
+hatchvcs = ["0.3.0", "0.4.0", "latest"]
+
+[tool.hatch.envs.default]
+dependencies = [
+  "mypy==1.8.0",
+  "ruff==0.2.2",
+  "pytest~=8.0.1",
+]
+
+[tool.hatch.envs.default.scripts]
+check = "mypy --install-types --non-interactive {args:src/hatch_vcs_tunable tests}"
+format = "ruff format {args:src/hatch_vcs_tunable tests}"
+lint = "ruff check {args:src/hatch_vcs_tunable tests}"
+test = "pytest {args:tests}"
+
+[tool.coverage.run]
+source_pkgs = ["hatch_vcs_tunable", "tests"]
+branch = true
+parallel = true
+
+[tool.coverage.paths]
+hatch_vcs_tunable = ["src/hatch_vcs_tunable", "*/hatch-vcs-tunable/src/hatch_vcs_tunable"]
+tests = ["tests", "*/hatch-vcs-tunable/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.towncrier]
+start_string = "<!-- towncrier release notes start -->\n"
+underlines = ["", "", ""]
+title_format = "## [{version}](https://github.com/opentrons/hatch-plugins/tree/{version}/hatch-vcs-tunable) - {project_date}"
+issue_format = "[#{issue}](https://github.com/opentrons/hatch-plugins/issues/{issue})"
+package = "hatch_vcs_tunable"
+package_dir = "src"
+directory = "changelog.d"
+filename = "CHANGES.md"
+
+[[tool.towncrier.type]]
+directory = "security"
+name = "Security"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "removed"
+name = "Removed"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "deprecated"
+name = "Deprecated"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "added"
+name = "Added"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "changed"
+name = "Changed"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "fixed"
+name = "Fixed"
+showcontent = true
