@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 """A version source extending hatch_vcs with the ability to set configuration from the environment."""
+from __future__ import annotations
 from os import environ
 from collections import deque
 from typing import Iterable
