@@ -1,4 +1,4 @@
-# hatch-vvcs-tunable
+# hatch-vcs-tunable
 
 [![PyPI - Version](https://img.shields.io/pypi/v/hatch-git-version-tunable.svg)](https://pypi.org/project/hatch-git-version-tunable)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/hatch-git-version-tunable.svg)](https://pypi.org/project/hatch-git-version-tunable)
