@@ -39,6 +39,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [which-paths]
     steps:
+      - name: Check diff
+        run: |
+          echo "Diff is: ${{needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF"
+          echo "Is equal to empty string: ${{needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF != ''}}"
       - name: Install python
         uses: actions/setup-python@v5
         with:
