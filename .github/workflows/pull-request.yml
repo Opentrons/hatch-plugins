@@ -35,7 +35,7 @@ jobs:
           echo "MANAGEMENT_DIFF=\"${GIT_DIFF_FILTERED}\"" >> $GITHUB_OUTPUT
 
   hatch-vcs-tunable-analysis:
-    if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF }}
+    if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF != '' }}
     runs-on: ubuntu-latest
     needs: [which-paths]
     steps:
@@ -66,7 +66,7 @@ jobs:
         working-directory: hatch-vcs-tunable
 
   hatch-vcs-tunable-tests:
-    if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF }}
+    if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF != '' }}
     needs: [which-paths, hatch-vcs-tunable-analysis]
     runs-on: ${{ matrix.os }}
     strategy:
@@ -84,7 +84,7 @@ jobs:
           pipx install hatch
       - name: Fetch repo
         uses: actions/checkout@v3
-      - name: Create default env
+      - name: Create test env
         run: hatch env create test
         working-directory: hatch-vcs-tunable
       - name: Run all tests
