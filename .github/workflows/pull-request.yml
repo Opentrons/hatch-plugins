@@ -1,3 +1,4 @@
+name: 'linting and testing'
 on:
   pull_request:
     types:
