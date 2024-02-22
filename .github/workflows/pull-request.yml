@@ -49,6 +49,7 @@ jobs:
           echo "Is equal to empty string: ${{needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF == ''}}"
           echo "Is equal to null: ${{needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF == null}}"
           echo "Contains empty string: ${{contains(needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF, '')}}"
+          echo "Is equal to a pair of quotes lol: ${{needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF == '""'}}"
           echo "Hexdump: echo '${{needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF}}' | hexdump"
       - name: Install python
         uses: actions/setup-python@v5
