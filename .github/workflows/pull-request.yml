@@ -14,7 +14,7 @@ jobs:
       - name: Fetch repo for diffing
         uses: actions/checkout@v3
       - name: Check if vcs-tunable-analysis changed
-        uses: actions/get-diff-action@v6
+        uses: technote-space/get-diff-action@v6
         with:
           PATTERNS: |
             +hatch-vcs-tunable/**/*
@@ -24,7 +24,7 @@ jobs:
         run: |
           echo "HATCH_VCS_TUNABLE_DIFF=${GIT_DIFF_FILTERED}" >> $GITHUB_OUTPUT
       - name: Check if repo management changed
-        uses: actions/get-diff-action@v6
+        uses: technote-space/get-diff-action@v6
         with:
           PATTERNS: |
             -hatch-vcs-tunable/**/*
