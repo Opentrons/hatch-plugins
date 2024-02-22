@@ -1,0 +1,34 @@
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronized
+
+  jobs:
+    which-paths:
+      runs-on: ubuntu-latest
+      outputs:
+        HATCH_VCS_TUNABLE_DIFF: ${{ steps.hatch-vcs-tunable-diff.outputs.HATCH_VCS_TUNABLE_DIFF }}
+      steps:
+        - name: Fetch repo for diffing
+          uses: actions/checkout@v3
+        - name: Check if vcs-tunable-analysis changed
+          uses: actions/get-diff-action@v6
+          with:
+            PATTERNS: |
+              +hatch-vcs-tunable/**/*
+              +.github/workflows/pull-request.yml
+        - name: Set diff output for hatch-vcs-tunable
+          id: hatch-vcs-tunable-diff
+          run: |
+            echo "HATCH_VCS_TUNABLE_DIFF=${GIT_DIFF_FILTERED}" >> $GITHUB_OUTPUT
+    hatch-vcs-tunable-analysis:
+      runs-on: ubuntu-latest
+      needs: [which-paths]
+      if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF }}
+      steps:
+        - name: Ask for news fragments
+          if: ${{ !contains(needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF, changelog.d) }}
+          run: |
+            echo 'Please add a news fragment for your change.'
+            exit 1
