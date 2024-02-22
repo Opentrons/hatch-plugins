@@ -39,18 +39,10 @@ jobs:
           echo "MANAGEMENT_DIFF=\"$(echo ${GIT_DIFF_FILTERED} | set 's/ *$//')\"" >> $GITHUB_OUTPUT
 
   hatch-vcs-tunable-analysis:
-    if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF != '' }}
+    if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF != '""' }}
     runs-on: ubuntu-latest
     needs: [which-paths]
     steps:
-      - name: Check diff
-        run: |
-          echo "Diff is: ${{needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF}}"
-          echo "Is equal to empty string: ${{needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF == ''}}"
-          echo "Is equal to null: ${{needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF == null}}"
-          echo "Contains empty string: ${{contains(needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF, '')}}"
-          echo "Is equal to a pair of quotes lol: ${{needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF == '""'}}"
-          echo "Hexdump: echo '${{needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF}}' | hexdump"
       - name: Install python
         uses: actions/setup-python@v5
         with:
@@ -78,7 +70,7 @@ jobs:
         working-directory: hatch-vcs-tunable
 
   hatch-vcs-tunable-tests:
-    if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF != '' }}
+    if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF != '""' }}
     needs: [which-paths, hatch-vcs-tunable-analysis]
     runs-on: ${{ matrix.os }}
     strategy:
