@@ -1,7 +1,7 @@
 # hatch-vcs-tunable
 
-[![PyPI - Version](https://img.shields.io/pypi/v/hatch-git-version-tunable.svg)](https://pypi.org/project/hatch-git-version-tunable)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/hatch-git-version-tunable.svg)](https://pypi.org/project/hatch-git-version-tunable)
+[![PyPI - Version](https://img.shields.io/pypi/v/hatch-git-version-tunable.svg)](https://pypi.org/project/hatch-vcs-tunable)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/hatch-git-version-tunable.svg)](https://pypi.org/project/hatch-vcs-tunable)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 
