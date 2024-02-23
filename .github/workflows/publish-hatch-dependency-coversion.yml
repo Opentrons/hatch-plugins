@@ -1,0 +1,26 @@
+name: 'publish hatch-dependency-coversion'
+on:
+  push:
+    tags:
+      - 'hatch-dependency-coversion@*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: hatch-dependency-coversion-pypi-release
+      url: https://pypi.org/p/hatch-dependency-tunable
+    permissions:
+      id-token: write
+    steps:
+    - name: Fetch source for package build
+      uses: actions/checkout@v3
+    - name: Build distribution
+      run: |
+        hatch build
+      working-directory:
+        hatch-dependency-coversion
+    - name: Publish package distributions to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        packages-dir: hatch-dependency-coversion/dist
