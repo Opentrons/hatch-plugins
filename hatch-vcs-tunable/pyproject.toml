@@ -29,12 +29,14 @@ dependencies = [
     "hatch-vcs>=0.3.0,<1.0.0"
 ]
 
+[project.entry-points.hatch]
+vcs-tunable = "hatch_vcs_tunable.hooks"
 
 [project.urls]
-Documentation = "https://github.com/Opentrons/hatch-plugins#readme"
+Documentation = "https://github.com/Opentrons/hatch-plugins/tree/main/hatch-vcs-tunable#readme"
 Issues = "https://github.com/Opentrons/hatch-plugins/issues"
 Source = "https://github.com/Opentrons/hatch-plugins/tree/main/hatch-vcs-tunable"
-Chnagelog = "https://github.com/Opentrons/hatch-plugins/tree/main/hatch-vcs-tunable/CHANGES.md"
+Changelog = "https://github.com/Opentrons/hatch-plugins/tree/main/hatch-vcs-tunable/CHANGES.md"
 
 [tool.hatch.version]
 source = "vcs"
