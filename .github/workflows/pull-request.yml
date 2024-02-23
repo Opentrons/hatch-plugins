@@ -23,6 +23,7 @@ jobs:
         with:
           PATTERNS: |
             hatch-vcs-tunable/**/*
+            hatch-vcs-tunable/**/.*
           FILES: |
             .github/workflows/pull-request.yml
       - name: Set diff output for hatch-vcs-tunable
@@ -34,7 +35,8 @@ jobs:
         with:
           PATTERNS: |
             **/*
-            .github/**/*
+            .*
+            .*/**/*
             !hatch-vcs-tunable/**/*
       - name: Set diff output for management
         id: management-diff
