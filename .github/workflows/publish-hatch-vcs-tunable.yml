@@ -1,4 +1,4 @@
-name: 'publish release'
+name: 'publish hatch-vcs-tunable'
 on:
   push:
     tags:
