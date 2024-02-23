@@ -17,8 +17,8 @@ jobs:
         uses: technote-space/get-diff-action@v6
         with:
           PATTERNS: |
-            +hatch-vcs-tunable/**/*
-            +.github/workflows/pull-request.yml
+            hatch-vcs-tunable/**/*
+            hatch-vcs-tunable/**/.*
       - name: Set diff output for hatch-vcs-tunable
         id: hatch-vcs-tunable-diff
         run: |
