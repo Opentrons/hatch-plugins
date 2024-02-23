@@ -26,7 +26,7 @@ jobs:
   hatch-vcs-tunable-analysis:
     runs-on: ubuntu-latest
     needs: [which-paths]
-    if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF }}
+    if: ${{ contains(needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF, 'hatch_vcs_tunable')}}
     steps:
       - name: Ask for news fragments
         if: ${{ !contains(needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF, 'changelog.d') }}
