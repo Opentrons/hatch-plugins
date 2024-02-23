@@ -1,87 +1,101 @@
+name: 'linting and testing'
 on:
   pull_request:
     types:
       - opened
-      - synchronized
+      - synchronize
 
-  jobs:
-    which-paths:
-      runs-on: ubuntu-latest
-      outputs:
-        HATCH_VCS_TUNABLE_DIFF: ${{ steps.hatch-vcs-tunable-diff.outputs.HATCH_VCS_TUNABLE_DIFF }}
-        MANAGEMENT_DIFF: ${{ steps.management-diff.outputs.MANAGEMENT_DIFF }}
-      steps:
-        - name: Fetch repo for diffing
-          uses: actions/checkout@v3
-        - name: Check if vcs-tunable-analysis changed
-          uses: actions/get-diff-action@v6
-          with:
-            PATTERNS: |
-              +hatch-vcs-tunable/**/*
-              +.github/workflows/pull-request.yml
-        - name: Set diff output for hatch-vcs-tunable
-          id: hatch-vcs-tunable-diff
-          run: |
-            echo "HATCH_VCS_TUNABLE_DIFF=${GIT_DIFF_FILTERED}" >> $GITHUB_OUTPUT
-        - name: Check if repo management changed
-          uses: actions/get-diff-action@v6
-          with:
-            PATTERNS: |
-              -hatch-vcs-tunable/**/*
-        - name: Set diff output for management
-          id: management-diff
-          run: |
-            echo MANAGEMENT_DIFF=${GIT_DIFF_FILTERED}" >> $GITHUB_OUTPUT
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
-    hatch-vcs-tunable-analysis:
-      if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF }}
-      runs-on: ubuntu-latest
-      needs: [which-paths]
-      steps:
-        - name: Install python
-          uses: actions/setup-python@v5
-          with:
-            python-version: 3.10
-        - name: Set up python environment
-          run: |
-            python -m install pipx
-            pipx install hatch
-        - name: Fetch repo
-          uses: actions/checkout@v3
-        - name: Create default env
-          run: hatch env create default
-          working-directory: hatch-vcs-tunable
-        - name: Check formatting
-          run: hatch run format --check
-          working-directory: hatch-vcs-tunable
-        - name: Lint
-          run: hatch run lint
-          working-directory: hatch-vcs-tunable
-        - name: Check types
-          run: hatch run check
-        - name: Quick tests
-          run: hatch run test
+jobs:
+  which-paths:
+    runs-on: ubuntu-latest
+    outputs:
+      HATCH_VCS_TUNABLE_DIFF: ${{ steps.hatch-vcs-tunable-diff.outputs.HATCH_VCS_TUNABLE_DIFF }}
+      MANAGEMENT_DIFF: ${{ steps.management-diff.outputs.MANAGEMENT_DIFF }}
+    steps:
+      - name: Fetch repo for diffing
+        uses: actions/checkout@v3
+      - name: Check if vcs-tunable-analysis changed
+        uses: technote-space/get-diff-action@v6
+        with:
+          PATTERNS: |
+            hatch-vcs-tunable/**/*
+            hatch-vcs-tunable/**/.*
+          FILES: |
+            .github/workflows/pull-request.yml
+      - name: Set diff output for hatch-vcs-tunable
+        id: hatch-vcs-tunable-diff
+        run: |
+          echo "HATCH_VCS_TUNABLE_DIFF=\"$(echo ${GIT_DIFF_FILTERED} | sed 's/ *$//')\"" >> $GITHUB_OUTPUT
+      - name: Check if repo management changed
+        uses: technote-space/get-diff-action@v6
+        with:
+          PATTERNS: |
+            **/*
+            .*
+            .*/**/*
+            !hatch-vcs-tunable/**/*
+      - name: Set diff output for management
+        id: management-diff
+        run: |
+          echo "MANAGEMENT_DIFF=\"$(echo ${GIT_DIFF_FILTERED} | set 's/ *$//')\"" >> $GITHUB_OUTPUT
 
-    hatch-vcs-tunable-tests:
-      if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF }}
-      needs: [which-paths, hatch-vcs-tunable-analysis]
-      runs-on: ${{ matrix.env }}
-      strategy:
-        fail-fast: true
-        matrix:
-          os: [ubuntu-latest, windows-latest, macos-latest]
-      steps:
-        - name: Install python
-          uses: actions/setup-python@v5
-          with:
-            python-version: 3.10
-        - name: Set up python environment
-          run: |
-            python -m install pipx
-            pipx install hatch
-        - name: Fetch repo
-          uses: actions/checkout@v3
-        - name: Create default env
-          run: hatch env create test
-        - name: Run all tests
-          run: hatch run test:test
+  hatch-vcs-tunable-analysis:
+    if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF != '""' }}
+    runs-on: ubuntu-latest
+    needs: [which-paths]
+    steps:
+      - name: Install python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Set up python environment
+        run: |
+          python -m pip install pipx
+          pipx install hatch
+      - name: Fetch repo
+        uses: actions/checkout@v3
+      - name: Create default env
+        run: hatch env create default
+        working-directory: hatch-vcs-tunable
+      - name: Check formatting
+        run: hatch run format --check
+        working-directory: hatch-vcs-tunable
+      - name: Lint
+        run: hatch run lint
+        working-directory: hatch-vcs-tunable
+      - name: Check types
+        run: hatch run check
+        working-directory: hatch-vcs-tunable
+      - name: Quick tests
+        run: hatch run test
+        working-directory: hatch-vcs-tunable
+
+  hatch-vcs-tunable-tests:
+    if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF != '""' }}
+    needs: [which-paths, hatch-vcs-tunable-analysis]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Install python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Set up python environment
+        run: |
+          python -m pip install pipx
+          pipx install hatch
+      - name: Fetch repo
+        uses: actions/checkout@v3
+      - name: Create test env
+        run: hatch env create test
+        working-directory: hatch-vcs-tunable
+      - name: Run all tests
+        run: hatch run test:test
+        working-directory: hatch-vcs-tunable
