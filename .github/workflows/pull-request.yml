@@ -33,6 +33,8 @@ jobs:
         uses: technote-space/get-diff-action@v6
         with:
           PATTERNS: |
+            **/*
+            .github/**/*
             !hatch-vcs-tunable/**/*
       - name: Set diff output for management
         id: management-diff
