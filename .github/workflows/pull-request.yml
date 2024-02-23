@@ -16,14 +16,13 @@ jobs:
       HATCH_VCS_TUNABLE_DIFF: ${{ steps.hatch-vcs-tunable-diff.outputs.HATCH_VCS_TUNABLE_DIFF }}
       MANAGEMENT_DIFF: ${{ steps.management-diff.outputs.MANAGEMENT_DIFF }}
     steps:
-      - name: Fetch repo for diffing
-        uses: actions/checkout@v3
       - name: Check if vcs-tunable-analysis changed
         uses: technote-space/get-diff-action@v6
         with:
           PATTERNS: |
-            +hatch-vcs-tunable/**/*
-            +.github/workflows/pull-request.yml
+            hatch-vcs-tunable/**/*
+          FILES: |
+            .github/workflows/pull-request.yml
       - name: Set diff output for hatch-vcs-tunable
         id: hatch-vcs-tunable-diff
         run: |
@@ -32,7 +31,7 @@ jobs:
         uses: technote-space/get-diff-action@v6
         with:
           PATTERNS: |
-            -hatch-vcs-tunable/**/*
+            !hatch-vcs-tunable/**/*
       - name: Set diff output for management
         id: management-diff
         run: |
