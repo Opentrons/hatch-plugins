@@ -8,7 +8,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment:
-      name: hatch-vcs-tunable-release
+      name: hatch-vcs-tunable-pypi-release
       url: https://pypi.org/p/hatch-vcs-tunable
     permissions:
       id-token: write
