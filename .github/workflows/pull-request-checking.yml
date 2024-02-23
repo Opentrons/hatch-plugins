@@ -1,6 +1,6 @@
 name: 'pull request checking'
 on:
-  pull_request_target:
+  pull_request:
     types:
       - opened
       - synchronize
@@ -35,9 +35,9 @@ jobs:
         run: |
           echo "HATCH_DEPENDENCY_COVERSION_DIFF=\"${GIT_DIFF_FILTERED}\"" >> $GITHUB_OUTPUT
   hatch-vcs-tunable-analysis:
+    if: ${{ contains(needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF, 'hatch_vcs_tunable')}}
     runs-on: ubuntu-latest
     needs: [which-paths]
-    if: ${{ needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF != '""' }}
     steps:
       - name: Ask for news fragments
         if: ${{ !contains(needs.which-paths.outputs.HATCH_VCS_TUNABLE_DIFF, 'changelog.d') }}
@@ -47,7 +47,7 @@ jobs:
   hatch-dependency-coversion-analysis:
     runs-on: ubuntu-latest
     needs: [which-paths]
-    if: ${{ needs.which-paths.outputs.HATCH_DEPENDENCY_COVERSION_DIFF != '""' }}
+    if: ${{ contains(needs.which-paths.outputs.HATCH_DEPENDENCY_COVERSION_DIFF, 'hatch_dependency_coversion') }}
     steps:
       - name: Ask for news fragments
         if: ${{ !contains(needs.which-paths.outputs.HATCH_DEPENDENCY_COVERSION_DIFF, 'changelog.d') }}
