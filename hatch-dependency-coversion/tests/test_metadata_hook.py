@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pathlib import Path
 import pkginfo
 from .utils import build_wheel
