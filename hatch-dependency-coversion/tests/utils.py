@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from shlex import quote
 from sys import executable
 from pathlib import Path
 from os import linesep
@@ -25,16 +26,16 @@ class SubprocFailed(Exception):
 def build_wheel(proj_path: Path, output_path: Path | None = None) -> Path:
     output = output_path or proj_path / "dist"
     output.mkdir()
-    cmd = [
-        executable,
+    cmd = ' '.join([
+        quote(executable),
         "-m",
         "build",
         "--no-isolation",
         "--wheel",
         "-o",
-        str(output),
-        str(proj_path),
-    ]
+        quote(str(output)),
+        quote(str(proj_path)),
+    ])
     proc = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
     )
@@ -43,7 +44,7 @@ def build_wheel(proj_path: Path, output_path: Path | None = None) -> Path:
     stderr_content = stderr.decode("utf-8")
     if proc.returncode:
         raise SubprocFailed(
-            " ".join(cmd), proc.returncode, stdout_content, stderr_content
+            cmd, proc.returncode, stdout_content, stderr_content
         )
     for line in stdout_content.split(linesep):
         if ".whl" in line:
