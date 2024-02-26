@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from sys import executable
 from pathlib import Path
 from os import linesep
 import subprocess
@@ -25,7 +26,7 @@ def build_wheel(proj_path: Path, output_path: Path | None = None) -> Path:
     output = output_path or proj_path / "dist"
     output.mkdir()
     cmd = [
-        "python",
+        executable,
         "-m",
         "build",
         "--no-isolation",
@@ -34,7 +35,9 @@ def build_wheel(proj_path: Path, output_path: Path | None = None) -> Path:
         str(output),
         str(proj_path),
     ]
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc = subprocess.Popen(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
+    )
     stdout, stderr = proc.communicate()
     stdout_content = stdout.decode("utf-8")
     stderr_content = stderr.decode("utf-8")
