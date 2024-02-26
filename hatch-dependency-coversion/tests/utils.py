@@ -3,17 +3,12 @@ from __future__ import annotations
 from pathlib import Path
 from os import linesep
 import subprocess
-
-
-def _indent(msg: str, count: int = 0) -> str:
-    lines = msg.split(linesep)
-    indent = "\t" * count
-    return indent + f"{indent}{linesep}".join(lines)
+from textwrap import indent
 
 
 class SubprocFailed(Exception):
     def __init__(self, command: str, returncode: int, stdout: str, stderr: str) -> None:
-        self.message = f"Command {command} failed: {returncode}!{linesep}stdout:{linesep}{_indent(stdout, 1)}{linesep}stderr:{linesep}{_indent(stderr, 1)}"
+        self.message = f"Command {command} failed: {returncode}!{linesep}stdout:{linesep}{indent(stdout, '    ')}{linesep}stderr:{linesep}{indent(stderr, '    ')}"
         self.command = command
         self.returncode = returncode
         self.stdout = stdout
@@ -53,5 +48,5 @@ def build_wheel(proj_path: Path, output_path: Path | None = None) -> Path:
                 if ".whl" in part:
                     return output / part
     raise RuntimeError(
-        f'Failed to find wheel in stdout from {" ".join(cmd)}!{linesep}stdout:{linesep}{_indent(stdout_content)}'
+        f'Failed to find wheel in stdout from {" ".join(cmd)}!{linesep}stdout:{linesep}{indent(stdout_content, "    ")}'
     )
