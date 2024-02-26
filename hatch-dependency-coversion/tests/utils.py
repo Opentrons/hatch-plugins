@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from shlex import quote
 from sys import executable
 from pathlib import Path
 from os import linesep
@@ -28,14 +27,14 @@ def build_wheel(proj_path: Path, output_path: Path | None = None) -> Path:
     output.mkdir()
     cmd = " ".join(
         [
-            quote(executable),
+            f'"{executable}"',
             "-m",
             "build",
             "--no-isolation",
             "--wheel",
             "-o",
-            quote(str(output)),
-            quote(str(proj_path)),
+            f'"{str(output)}"',
+            f'"{str(proj_path)}"',
         ]
     )
     proc = subprocess.Popen(
