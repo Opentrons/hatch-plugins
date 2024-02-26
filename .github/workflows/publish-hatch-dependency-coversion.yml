@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: hatch-dependency-coversion-pypi-release
-      url: https://pypi.org/p/hatch-dependency-tunable
+      url: https://pypi.org/p/hatch-dependency-coversion
     permissions:
       id-token: write
     steps:
