@@ -1,0 +1,27 @@
+name: 'publish hatch-vcs-tunable'
+on:
+  push:
+    tags:
+      - 'hatch-vcs-tunable@*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: hatch-vcs-tunable-pypi-release
+      url: https://pypi.org/p/hatch-vcs-tunable
+    permissions:
+      id-token: write
+    steps:
+    - name: Fetch source for package build
+      uses: actions/checkout@v3
+    - name: Build distribution
+      run: |
+        python -m pip install hatch
+        hatch build
+      working-directory:
+        hatch-vcs-tunable
+    - name: Publish package distributions to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        packages-dir: hatch-vcs-tunable/dist
