@@ -1,0 +1,154 @@
+[build-system]
+requires = ["hatchling==1.21.1", "hatch-vcs==0.4.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hatch-dependency-coversion"
+dynamic = ["version"]
+description = "Require that specific dependencies of your package are exactly coversioned."
+readme = "README.md"
+requires-python = ">=3.8"
+license = "Apache-2.0"
+keywords = ["hatch", "version", "coversioning", "monorepo"]
+authors = [
+  { name = "Opentrons Engineering", email = "engineering@opentrons.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+  "Framework :: Hatch"
+]
+dependencies = ["hatchling>1.0.0,<2.0.0", "packaging>=22.0"]
+
+[project.entry-points.hatch]
+dependency-coversion = "hatch_dependency_coversion.hooks"
+
+[project.urls]
+Documentation = "https://github.com/Opentrons/hatch-plugins/tree/main/hatch-dependency-coversion#readme"
+Issues = "https://github.com/Opentrons/hatch-plugins/issues"
+Source = "https://github.com/Opentrons/hatch-plugins"
+Changelog = "https://github.com/Opentrons/hatch-plugins/tree/main/hatch-dependency-coversion/CHANGES.md"
+
+[tool.hatch.version]
+source = "vcs"
+fallback-version = "0.0.0-dev"
+tag-pattern = "hatch-dependency-coversion@(?P<version>)"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/hatch_dependency_coversion/_version.py"
+
+[tool.hatch.envs.maintenance]
+dependencies = [
+  "towncrier"
+]
+
+[tool.hatch.envs.maintenance.scripts]
+changes-new = "towncrier create {args}"
+changes-build = "towncrier build {args}"
+
+[tool.hatch.envs.test]
+dependencies = [
+  "coverage[toml]>=6.5",
+  "pytest~=8.0.1",
+  "build",
+  "pkginfo",
+]
+[tool.hatch.envs.test.scripts]
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
+cov-report = [
+  "- coverage combine",
+  "coverage report",
+]
+cov = [
+  "test-cov",
+  "cov-report",
+]
+
+[tool.hatch.envs.test.overrides]
+name."py*-1.0.0".dependencies = ["hatchling==1.0.0"]
+name."py*-1.21.1".dependencies = ["hatchling==1.21.1"]
+name."py*-latest".dependencies = ["hatchling"]
+
+[[tool.hatch.envs.test.matrix]]
+python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
+hatchling = ["1.0.0", "1.21.1", "latest"]
+
+[tool.hatch.envs.default]
+dependencies = [
+  "coverage[toml]>=6.5",
+  "pytest~=8.0.1",
+  "mypy==1.8.0",
+  "ruff==0.2.2",
+  "build",
+  "pkginfo",
+]
+
+[tool.hatch.envs.default.scripts]
+check = "mypy --install-types --non-interactive {args:src/hatch_dependency_coversion tests}"
+format = "ruff format {args:src/hatch_dependency_coversion tests}"
+lint = "ruff check {args:src/hatch_dependency_coversion tests}"
+test = "pytest {args:tests}"
+
+[tool.coverage.run]
+source_pkgs = ["hatch_dependency_coversion", "tests"]
+branch = true
+parallel = true
+
+[tool.coverage.paths]
+hatch_dependency_coversion = ["src/hatch_dependency_coversion", "*/hatch-dependency-coversion/src/hatch_dependency_coversion"]
+tests = ["tests", "*/hatch-dependency-coversion/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.towncrier]
+start_string = "<!-- towncrier release notes start -->\n"
+underlines = ["", "", ""]
+title_format = "## [{version}](https://github.com/opentrons/hatch-plugins/tree/{version}/hatch-dependency-coversion) - {project_date}"
+issue_format = "[#{issue}](https://github.com/opentrons/hatch-plugins/issues/{issue})"
+package = "hatch_dependency_coversion"
+package_dir = "src"
+directory = "changelog.d"
+filename = "CHANGES.md"
+
+[[tool.towncrier.type]]
+directory = "security"
+name = "Security"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "removed"
+name = "Removed"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "deprecated"
+name = "Deprecated"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "added"
+name = "Added"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "changed"
+name = "Changed"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "fixed"
+name = "Fixed"
+showcontent = true
