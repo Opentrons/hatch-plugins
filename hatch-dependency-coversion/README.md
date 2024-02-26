@@ -19,8 +19,8 @@ setup(name='my-project', version=VERSION, install_requires=[f'my-dependency=={VE
 Minimal configuration is done in your `pyproject.toml` like this:
 
 ``` toml
-# Since this is a plugin for hatchling, you must be using hatchling as your build backend 
 [build-system]
+# Since this is a plugin for hatchling, you must be using hatchling as your build backend
 requires = ["hatchling", "hatch-dependency-coversion"]
 build-backend = "hatchling.build"
 
@@ -28,10 +28,12 @@ build-backend = "hatchling.build"
 name = "my-project"
 version = "0.1.0"
 dependencies = [
-    "my-dependency==0.0.0"  # 0.0.0 is chosen at random and will be overwritten
+    # 0.0.0 is chosen at random and will be overwritten
+    "my-dependency==0.0.0"
 ]
 [tool.hatch.metadata.hooks.dependency-coversion]
-override-versions-of = ["my-dependency"]  # this list contains the names of dependencies to override
+# this list contains the names of dependencies to override
+override-versions-of = ["my-dependency"]
 ```
 
 **Table of Contents**
