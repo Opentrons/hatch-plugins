@@ -26,16 +26,18 @@ class SubprocFailed(Exception):
 def build_wheel(proj_path: Path, output_path: Path | None = None) -> Path:
     output = output_path or proj_path / "dist"
     output.mkdir()
-    cmd = ' '.join([
-        quote(executable),
-        "-m",
-        "build",
-        "--no-isolation",
-        "--wheel",
-        "-o",
-        quote(str(output)),
-        quote(str(proj_path)),
-    ])
+    cmd = " ".join(
+        [
+            quote(executable),
+            "-m",
+            "build",
+            "--no-isolation",
+            "--wheel",
+            "-o",
+            quote(str(output)),
+            quote(str(proj_path)),
+        ]
+    )
     proc = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
     )
@@ -43,9 +45,7 @@ def build_wheel(proj_path: Path, output_path: Path | None = None) -> Path:
     stdout_content = stdout.decode("utf-8")
     stderr_content = stderr.decode("utf-8")
     if proc.returncode:
-        raise SubprocFailed(
-            cmd, proc.returncode, stdout_content, stderr_content
-        )
+        raise SubprocFailed(cmd, proc.returncode, stdout_content, stderr_content)
     for line in stdout_content.split(linesep):
         if ".whl" in line:
             for part in line.split(" "):
