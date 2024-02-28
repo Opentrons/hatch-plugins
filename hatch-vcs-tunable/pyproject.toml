@@ -41,7 +41,7 @@ Changelog = "https://github.com/Opentrons/hatch-plugins/tree/main/hatch-vcs-tuna
 [tool.hatch.version]
 source = "vcs"
 fallback-version = "0.0.0-dev"
-tag-pattern = "hatch-vcs-tunable@(?P<version>[0-9]+\\.[0-9]+\\.[0-9]+(\\.(a(lpha-)?|b(eta-)?)[0-9]+)?)"
+tag-pattern = "hatch-vcs-tunable@(?P<version>[0-9]+\\.[0-9]+\\.[0-9]+((a|b|\\.alpha-|\\.beta-)[0-9]+)?)"
 
 [tool.hatch.build.hooks.vcs]
 version-file="src/hatch_vcs_tunable/_version.py"

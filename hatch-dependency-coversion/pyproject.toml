@@ -39,7 +39,7 @@ Changelog = "https://github.com/Opentrons/hatch-plugins/tree/main/hatch-dependen
 [tool.hatch.version]
 source = "vcs"
 fallback-version = "0.0.0-dev"
-tag-pattern = "hatch-dependency-coversion@(?P<version>[0-9]+\\.[0-9]+\\.[0-9]+(\\.(a(lpha-)?|b(eta-)?)[0-9]+)?)"
+tag-pattern = "hatch-dependency-coversion@(?P<version>[0-9]+\\.[0-9]+\\.[0-9]+((a|b|\\.alpha-|\\.beta-)[0-9]+)?)"
 
 [tool.hatch.build.hooks.vcs]
 version-file = "src/hatch_dependency_coversion/_version.py"
