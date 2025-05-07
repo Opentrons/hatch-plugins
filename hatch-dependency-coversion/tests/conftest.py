@@ -29,6 +29,7 @@ def unconfigured_project(tmp_path: Path, static_requirements: list[str]) -> Path
         name = "unconfigured-project"
         version = "0.1.0"
         dependencies = [{','.join([f'"{requirement}"' for requirement in static_requirements])}]
+        dynamic = ['dependency-coversion']
         [tool.hatch.metadata.hooks.dependency-coversion]
         """
         )
@@ -52,6 +53,7 @@ def requests_zero_coversions_project(
         name = "zero-coversions-project"
         version = "0.1.0"
         dependencies = [{','.join([f'"{requirement}"' for requirement in static_requirements])}]
+        dynamic = ['dependency-coversion']
         [tool.hatch.metadata.hooks.dependency-coversion]
         override-versions-of=[]
         """
@@ -76,6 +78,7 @@ def requests_coversion_of_open_version_project(
         name = "coversion-of-open-version-project"
         version = "0.1.0"
         dependencies = [{','.join([f'"{requirement}"' for requirement in static_requirements])}]
+        dynamic = ['dependency-coversion']
         [tool.hatch.metadata.hooks.dependency-coversion]
         override-versions-of=["dependency1"]
         """
@@ -100,6 +103,7 @@ def requests_coversion_of_specified_version_project(
         name = "coversion-of-specified-version-project"
         version = "0.1.0"
         dependencies = [{','.join([f'"{requirement}"' for requirement in static_requirements])}]
+        dynamic = ['dependency-coversion']
         [tool.hatch.metadata.hooks.dependency-coversion]
         override-versions-of=["dependency2"]
         """
@@ -124,6 +128,7 @@ def requests_coversion_of_marked_version_project(
         name = "coversion-of-marked-version-project"
         version = "0.1.0"
         dependencies = [{','.join([f'"{requirement}"' for requirement in static_requirements])}]
+        dynamic = ['dependency-coversion']
         [tool.hatch.metadata.hooks.dependency-coversion]
         override-versions-of=["dependency3"]
         """
@@ -146,6 +151,7 @@ def requests_multiple_project(tmp_path: Path, static_requirements: list[str]) ->
         name = "coversion-of-multiple-project"
         version = "0.1.0"
         dependencies = [{','.join([f'"{requirement}"' for requirement in static_requirements])}]
+        dynamic = ['dependency-coversion']
         [tool.hatch.metadata.hooks.dependency-coversion]
         override-versions-of=["dependency2", "dependency1", "dependency3"]
         """
