@@ -5,7 +5,7 @@
 """A metadata hook for hatchling that can force dependencies to be coversioned."""
 from __future__ import annotations
 import inspect
-from typing import Any
+from typing import Any, TypedDict
 
 from packaging.requirements import Requirement, SpecifierSet
 
@@ -16,7 +16,7 @@ from hatch_dependency_coversion.const import PLUGIN_NAME as _PLUGIN_NAME
 class DependencyCoversionMetadataHook(MetadataHookInterface):
     PLUGIN_NAME = _PLUGIN_NAME
     root: str
-    config: dict[str, str]
+    config: dict
 
     def _maybe_update_dep(
         self, depspec: str, version: str, which_dependencies: list[str]
@@ -47,10 +47,15 @@ class DependencyCoversionMetadataHook(MetadataHookInterface):
             (frame.function, frame.filename) for frame in inspect.stack()[1:]
         ):
             return
+        if "override-versions-of" not in self.config:
+            return
+        if not isinstance(self.config["override-versions-of"], list):
+            raise RuntimeError(
+                "tool.hatch.metadata.hooks.dependency-coversion.override-versions-of must be an array of strings"
+            )
+        override_of: list[str] = self.config["override-versions-of"]
         metadata["dependencies"] = self._update_dependency_versions(
-            metadata.get("dependencies", []),
-            metadata["version"],
-            self.config.get("override-versions-of", []),
+            metadata.get("dependencies", []), metadata["version"], override_of
         )
 
     def get_known_classifiers(self) -> list[str]:
