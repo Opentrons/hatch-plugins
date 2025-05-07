@@ -5,7 +5,7 @@
 """A metadata hook for hatchling that can force dependencies to be coversioned."""
 from __future__ import annotations
 import inspect
-from typing import Any, TypedDict
+from typing import Any
 
 from packaging.requirements import Requirement, SpecifierSet
 
