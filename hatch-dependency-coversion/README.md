@@ -31,6 +31,14 @@ dependencies = [
     # 0.0.0 is chosen at random and will be overwritten
     "my-dependency==0.0.0"
 ]
+# the dynamic entry must be present and the array must not be empty, otherwise hatch
+# will not invoke the plugin. however, something in dynamic cannot be in the rest of
+# the metadata, and only top-level keys can appear here - so if you did
+# dynamic = ['dependencies'], then it (a) would not be true since it's not all the
+# dependencies, just the versions of some of them and (b) you couldn't have a 
+# dependencies entry in the project table. so put an arbitrary string here, and the
+# name of the plugin is as good an arbitrary string as any.
+dynamic = ['dependency-coversioning']
 [tool.hatch.metadata.hooks.dependency-coversion]
 # this list contains the names of dependencies to override
 override-versions-of = ["my-dependency"]
