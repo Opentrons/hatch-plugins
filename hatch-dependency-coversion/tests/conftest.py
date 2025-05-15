@@ -160,3 +160,32 @@ def requests_multiple_project(tmp_path: Path, static_requirements: list[str]) ->
     (tmp_path / "coversion_of_multiple_project").mkdir()
     (tmp_path / "coversion_of_multiple_project" / "__init__.py").write_text("")
     return tmp_path
+
+
+@pytest.fixture
+def requests_coversion_of_optional_dependency_project(
+    tmp_path: Path, static_requirements: list[str]
+) -> Path:
+    (tmp_path / "pyproject.toml").write_text(
+        dedent(
+            f"""
+        [build-system]
+        requires = ["hatchling", "hatch-dependency-coversion"]
+        build-backend = "hatchling.build"
+        [project]
+        name = "coversion-of-optional-dependency-project"
+        version = "0.1.0"
+        dependencies = [{','.join([f'"{requirement}"' for requirement in static_requirements[1:]])}]
+        dynamic = ['dependency-coversion']
+        [project.optional-dependencies]
+        extra1 = [{f'"{static_requirements[0]}"'}]
+        [tool.hatch.metadata.hooks.dependency-coversion]
+        override-versions-of=["dependency1"]
+            """
+        )
+    )
+    (tmp_path / "coversion_of_optional_dependency_project").mkdir()
+    (tmp_path / "coversion_of_optional_dependency_project" / "__init__.py").write_text(
+        ""
+    )
+    return tmp_path

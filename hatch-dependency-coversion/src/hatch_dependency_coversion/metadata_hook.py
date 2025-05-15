@@ -39,6 +39,21 @@ class DependencyCoversionMetadataHook(MetadataHookInterface):
             for depspec in dependencies_metadata
         ]
 
+    def _update_optional_dependency_versions(
+        self,
+        optional_dependencies_metadata: dict[str, list[str]],
+        version: str,
+        which_dependencies: list[str],
+    ) -> dict[str, list[str]]:
+        """Do the actual optional dependency update"""
+        return {
+            extra: [
+                self._maybe_update_dep(depspec, version, which_dependencies)
+                for depspec in optional_dep_list
+            ]
+            for extra, optional_dep_list in optional_dependencies_metadata.items()
+        }
+
     def update(self, metadata: dict[str, Any]) -> None:
         """Update metadata for coversioning."""
         # this is from https://github.com/flying-sheep/hatch-docstring-description/blob/main/src/hatch_docstring_description/read_description.py
@@ -54,9 +69,18 @@ class DependencyCoversionMetadataHook(MetadataHookInterface):
                 "tool.hatch.metadata.hooks.dependency-coversion.override-versions-of must be an array of strings"
             )
         override_of: list[str] = self.config["override-versions-of"]
-        metadata["dependencies"] = self._update_dependency_versions(
-            metadata.get("dependencies", []), metadata["version"], override_of
-        )
+        if "dependencies" in metadata:
+            metadata["dependencies"] = self._update_dependency_versions(
+                metadata.get("dependencies", []), metadata["version"], override_of
+            )
+        if "optional-dependencies" in metadata:
+            metadata[
+                "optional-dependencies"
+            ] = self._update_optional_dependency_versions(
+                metadata.get("optional-dependencies", {}),
+                metadata["version"],
+                override_of,
+            )
 
     def get_known_classifiers(self) -> list[str]:
         """Dummy function that is part of the hook interface."""

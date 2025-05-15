@@ -53,3 +53,16 @@ def test_coversion_of_marked_version_applies(
     assert sorted(requires) == static_requirements[:2] + [
         "dependency3==0.1.0; os_name == 'Windows'"
     ]
+
+
+def test_coversion_of_optional_dependency_applies(
+    requests_coversion_of_optional_dependency_project: Path,
+    static_requirements: list[str],
+) -> None:
+    wheelpath = build_wheel(requests_coversion_of_optional_dependency_project)
+    dist_metadata = pkginfo.Wheel(str(wheelpath))
+    requires = dist_metadata.requires_dist
+    assert (
+        sorted(requires)
+        == ["dependency1==0.1.0; extra == 'extra1'"] + static_requirements[1:]
+    )
