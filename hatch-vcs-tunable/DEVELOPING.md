@@ -20,7 +20,7 @@ Pull requests should contain
 Static analysis tools are run from the default hatch environment. Typechecking is via [mypy](http://mypy-lang.org/), linting and formatting is via [ruff](https://github.com/astral-sh/ruff). You can run these commands with `hatch run` without further qualification:
 
 > [!TIP]
-> Easily use hatch with [uv](https://github.com/astral-sh/uv)
+> Easily use hatch with [uv](https://github.com/astral-sh/uv).
 > All commands below can be run prepending `uvx` to the command, e.g. `uvx hatch run check`
 > Even `uvx hatch run test:test` runs seamlessly
 
