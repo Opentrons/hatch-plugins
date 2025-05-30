@@ -4,11 +4,12 @@
 
 ## Contributing
 
-Contributions should come through pull request. If done via a fork, a maintainer will run the CI checks after a quick review. Open source contributions are welcome! 
+Contributions should come through pull request. If done via a fork, a maintainer will run the CI checks after a quick review. Open source contributions are welcome!
 
 Pull requests should contain
+
 - A descriptive title
-   - that is prefixed with `hatch-vcs-tunable:`, since this repository has multiple packages
+  - that is prefixed with `hatch-vcs-tunable:`, since this repository has multiple packages
 - A descriptive body that notes what the problem/missing feature is that the PR fixes and how the PR fixes it
 - A note on how the PR should be tested, if testing is required, and descriptions of how you tested it
 - A news fragment in `changelog.d` that adheres to [towncrier news fragment format](https://towncrier.readthedocs.io/en/stable/tutorial.html#creating-news-fragments) describing your change
@@ -17,6 +18,12 @@ Pull requests should contain
 ## Linting/formatting/typechecking
 
 Static analysis tools are run from the default hatch environment. Typechecking is via [mypy](http://mypy-lang.org/), linting and formatting is via [ruff](https://github.com/astral-sh/ruff). You can run these commands with `hatch run` without further qualification:
+
+> [!TIP]
+> Easily use hatch with [uv](https://github.com/astral-sh/uv)
+> All commands below can be run prepending `uvx` to the command, e.g. `uvx hatch run check`
+> Even `uvx hatch run test:test` runs seamlessly
+
 - Typecheck: `hatch run check`
 - Format: `hatch run format`
 - Lint: `hatch run lint`
@@ -36,5 +43,4 @@ Tests must pass in CI before a PR can be merged.
 ## Maintenance and Releasing
 
 Changelogs are generated using [towncrier](https://towncrier.readthedocs.io/en/stable/index.html). When opening a PR that has a newsworthy change, that PR should include a news fragment in `changelog.d`. Changelog generation happens during the release flow, which is automated via github actions that can be run by project maintainers.
-
 
