@@ -6,4 +6,4 @@
 
 ## Developers
 
-- [Josh McVey](https://github.com/joshmcvey)
+- [Josh McVey](https://github.com/y3rsh)
